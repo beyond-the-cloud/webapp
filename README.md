@@ -44,27 +44,52 @@ Repository for a simple web application.
     docker build -t webapp:1.0 .
     ```
 
-3. Load image to KinD Cluster
+3. Push image to Docker Hub
+
+    Make sure you login with your docker hub account
+    
+    You can check the Docker Desktop, or login using following command:
 
     ```
-    kind load docker-image SOURCE_IMAGE:TAG -- DEST_IMAGE:TAG CLUSTER_NAME
+    docker login --username USERNAME --password PASSWORD
+    ```
 
-    kind load docker-image webapp:1.0 -- webapp:1.0 local
+    Push image to docker hub
+
+    ```
+    docker tag IMAGE_NAME:TAG DOCKER_HUB_USERNAME/IMAGE_NAME:TAG
+    docker push DOCKER_HUB_USERNAME/IMAGE_NAME:TAG
+
+    docker tag webapp:1.0 bboysticker/webapp:1.0
+    docker push bboysticker/webapp:1.0
     ```
 
 4. Change values in `config-map.yml` and `secret.yml`
 
-5. Create K8s Objects
+    **Note:** for `secret.yml`, you need to provide base64 encoded string
+
+    ```
+    echo -n "INPUT_STRING" | base64
+    ```
+
+5. Create `docker-registry` secret
+
+    ```
+    kubectl create secret docker-registry docker-hub \
+        --docker-username=USERNAME \
+        --docker-password=PASSWORD \
+        --docker-email=EMAIL
+    ```
+
+6. Create K8s Objects
 
     ```
     kubectl apply -f deploy/config-map.yml
-
     kubectl apply -f deploy/sceret.yml
-
     kubectl apply -f deploy/pod.yml
     ```
 
-6. Port-forward
+7. Port-forward
 
     ```
     kubectl port-forward pod/POD_NAME LOCAL_PORT:CONTAINER_PORT
