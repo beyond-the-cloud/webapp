@@ -1,6 +1,6 @@
 src/main/resources/application-local.properties
 deploy/config-map-dev.yml
-deploy/secret.yml
+deploy/secret-dev.yml
 
 /target/
 !.mvn/wrapper/maven-wrapper.jar
