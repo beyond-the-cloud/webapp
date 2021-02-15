@@ -22,7 +22,6 @@ Repository for a simple web application.
         -e MYSQL_DB_NAME=csye7125 \
         -e MYSQL_DB_USERNAME=user \
         -e MYSQL_DB_PASSWORD=password \
-        -e spring.profiles.active=dev \
         -p 8080:8080 \
         webapp:1.0
     ```
