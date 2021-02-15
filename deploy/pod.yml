@@ -15,17 +15,17 @@ spec:
         name: db-config
     - secretRef:
         name: db-secret
-    livenessProbe:
+    readinessProbe:
       httpGet:
         path: /actuator/health
         port: 8080
       initialDelaySeconds: 45
       periodSeconds: 5
-    readinessProbe:
+    livenessProbe:
       httpGet:
         path: /v1/helloworld
         port: 8080
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       periodSeconds: 5
     resources:
       limits:
