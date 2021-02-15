@@ -2,6 +2,22 @@
 
 Repository for a simple web application.
 
+## Webapp with Docker
+
+1. Build the image
+
+```
+docker build -t webapp:1.0 .
+```
+
+2. Run webapp in local
+
+Make sure you have MySQL database set uo in your local
+
+```
+docker run -it -e MYSQL_DB_HOST=host.docker.internal -p 8080:8080 webapp:1.0
+```
+
 ## User Stories
 
 1. All API request/response payloads should be in JSON.
