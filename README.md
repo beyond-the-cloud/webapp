@@ -6,26 +6,72 @@ Repository for a simple web application.
 
 1. Build the image
 
-```
-docker build -t webapp:1.0 .
-```
+    ```
+    docker build -t webapp:1.0 .
+    ```
 
 2. Run webapp in local
 
-Make sure you have MySQL database set uo in your local.
-You will need to pass in your MySQL `port`, `schema`, `username` and `password`
+    Make sure you have MySQL database set uo in your local.
+    You will need to pass in your MySQL `port`, `schema`, `username` and `password`
 
-```
-docker run -it \
-    -e MYSQL_DB_HOST=host.docker.internal \
-    -e MYSQL_DB_PORT=3306 \
-    -e MYSQL_DB_NAME=csye7125 \
-    -e MYSQL_DB_USERNAME=user \
-    -e MYSQL_DB_PASSWORD=password \
-    -e spring.profiles.active=dev \
-    -p 8080:8080 \
-    webapp:1.0
-```
+    ```
+    docker run -it \
+        -e MYSQL_DB_HOST=host.docker.internal \
+        -e MYSQL_DB_PORT=3306 \
+        -e MYSQL_DB_NAME=csye7125 \
+        -e MYSQL_DB_USERNAME=user \
+        -e MYSQL_DB_PASSWORD=password \
+        -e spring.profiles.active=dev \
+        -p 8080:8080 \
+        webapp:1.0
+    ```
+
+## Webapp with KinD - local k8s
+
+1. Create kind cluster
+
+    ```
+    kind create cluster CLUSTER_NAME
+
+    kind create cluster local
+    ```
+
+2. Build the image
+
+    ```
+    docker build -t IMAGE_NAME:TAG .
+
+    docker build -t webapp:1.0 .
+    ```
+
+3. Load image to KinD Cluster
+
+    ```
+    kind load docker-image SOURCE_IMAGE:TAG -- DEST_IMAGE:TAG CLUSTER_NAME
+
+    kind load docker-image webapp:1.0 -- webapp:1.0 local
+    ```
+
+4. Change values in `config-map.yml` and `secret.yml`
+
+5. Create K8s Objects
+
+    ```
+    kubectl apply -f deploy/config-map.yml
+
+    kubectl apply -f deploy/sceret.yml
+
+    kubectl apply -f deploy/pod.yml
+    ```
+
+6. Port-forward
+
+    ```
+    kubectl port-forward pod/POD_NAME LOCAL_PORT:CONTAINER_PORT
+
+    kubectl port-forward pod/webapp 8080:8080
+    ```
 
 ## User Stories
 
