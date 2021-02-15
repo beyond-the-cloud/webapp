@@ -5,6 +5,8 @@ metadata:
   labels:
     name: webapp
 spec:
+  imagePullSecrets:
+  - name: docker-hub
   containers:
   - name: webapp
     image: webapp:1.0
@@ -15,7 +17,7 @@ spec:
         name: db-secret
     livenessProbe:
       httpGet:
-        path: /v1/helloworld
+        path: /actuator/health
         port: 8080
       initialDelaySeconds: 45
       periodSeconds: 5
