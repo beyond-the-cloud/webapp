@@ -12,10 +12,18 @@ docker build -t webapp:1.0 .
 
 2. Run webapp in local
 
-Make sure you have MySQL database set uo in your local
+Make sure you have MySQL database set uo in your local.
+You will need to pass in your MySQL `port`, `schema`, `username` and `password`
 
 ```
-docker run -it -e MYSQL_DB_HOST=host.docker.internal -p 8080:8080 webapp:1.0
+docker run -it \
+    -e MYSQL_DB_HOST=host.docker.internal \
+    -e MYSQL_DB_PORT=3306 \
+    -e MYSQL_DB_NAME=csye7125 \
+    -e MYSQL_DB_USERNAME=user \
+    -e MYSQL_DB_PASSWORD=password \
+    -p 8080:8080 \
+    webapp:1.0
 ```
 
 ## User Stories
