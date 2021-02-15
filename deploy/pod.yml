@@ -7,8 +7,7 @@ metadata:
 spec:
   containers:
   - name: webapp
-    # image: bboysticker/webapp:latest
-    image: webapp:2.0
+    image: webapp:1.0
     envFrom:
     - configMapRef:
         name: db-config
