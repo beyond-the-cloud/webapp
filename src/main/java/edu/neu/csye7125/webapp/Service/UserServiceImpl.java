@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 		savedUser.setLastName(user.getLastName());
 		savedUser.setEmailAddress(user.getEmailAddress());
 
-		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		if (user.getAccountCreated() == null) {
 			savedUser.setAccountCreated(dateFormat.format(new Date()));
 		} else {
