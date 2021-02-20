@@ -9,7 +9,7 @@ spec:
   - name: docker-hub
   containers:
   - name: webapp
-    image: webapp:1.0
+    image: bh7cw/webapp:latest
     envFrom:
     - configMapRef:
         name: db-config
