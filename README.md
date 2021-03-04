@@ -147,4 +147,3 @@ Jenkins is running on: https://jenkins.bh7cw.me
     1. Sensitive configuration information must be passed using Secrets and non-sensitive configuration information should be provided using ConfigMap.
 
 10. Create a top level directory called `deploy` and store all of you Kubernetes manifests in it.
-
