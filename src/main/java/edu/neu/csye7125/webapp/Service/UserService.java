@@ -14,6 +14,8 @@ public interface UserService extends UserDetailsService {
 
     User save(User user);
 
+    User getCurrentUser();
+
     @Override
     UserDetails loadUserByUsername(String username);
 }
