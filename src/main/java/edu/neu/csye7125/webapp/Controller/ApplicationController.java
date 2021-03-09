@@ -12,8 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -132,7 +130,7 @@ public class ApplicationController {
     public MappingJacksonValue findOne() {
         logger.info("Retrieving current user");
 
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         SimpleBeanPropertyFilter filter =
                 SimpleBeanPropertyFilter.filterOutAllExcept("id", "firstName", "lastName",
                         "emailAddress", "accountCreated", "accountUpdated");
@@ -169,7 +167,7 @@ public class ApplicationController {
             throw new WeakPasswordException("Password Too Weak!");
         }
 
-        User old = getCurrentUser();
+        User old = userService.getCurrentUser();
         // pass those static attributes
         user.setId(old.getId());
         user.setEmailAddress(old.getEmailAddress());
@@ -177,24 +175,6 @@ public class ApplicationController {
 
         userService.save(user);
         logger.info("User updated. ID: " + old.getId());
-    }
-
-    /**
-     * Helper function
-     * Return current authenticated user
-     * @return
-     */
-    private User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userService.findByUsername(username);
-
-        logger.info("Successfully obtained user: " + username);
-
-        if (user == null) {
-            throw new UserNotFoundException("User Not Found!");
-        }
-        return user;
     }
 
 }
