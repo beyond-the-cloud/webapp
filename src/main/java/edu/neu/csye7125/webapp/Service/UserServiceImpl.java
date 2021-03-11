@@ -2,8 +2,11 @@ package edu.neu.csye7125.webapp.Service;
 
 import edu.neu.csye7125.webapp.Dao.UserDao;
 import edu.neu.csye7125.webapp.Entity.User.User;
+import edu.neu.csye7125.webapp.Exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,6 +76,23 @@ public class UserServiceImpl implements UserService {
 				user.getPassword(),
 				AuthorityUtils.createAuthorityList("USER")
 		);
+	}
+
+	/**
+	 * Return current authenticated user
+	 * @return
+	 */
+	@Override
+	@Transactional
+	public User getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = auth.getName();
+		User user = userDao.findByUsername(username);
+
+		if (user == null) {
+			throw new UserNotFoundException("User Not Found!");
+		}
+		return user;
 	}
 
 }
