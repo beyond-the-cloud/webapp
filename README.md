@@ -2,7 +2,6 @@
 
 Repository for a simple web application.
 
-
 ## Jenkins 
 
 Jenkins is running on: https://jenkins.bh7cw.me
