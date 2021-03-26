@@ -8,8 +8,7 @@ import edu.neu.csye7125.webapp.Validation.PasswordValidator;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 public class ApplicationController {
 
     private final UserService userService;
@@ -28,8 +28,6 @@ public class ApplicationController {
     private EmailValidator emailValidator = new EmailValidator();
 
     private PasswordValidator passwordValidator = new PasswordValidator();
-
-    private Logger logger = LogManager.getLogger(getClass());
 
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -55,7 +53,7 @@ public class ApplicationController {
      */
     @GetMapping("/v1/users")
     public MappingJacksonValue findAll() {
-        logger.info("Retrieving all users");
+        log.info("Request Received. GET /v1/users");
 
         List<User> users = userService.findAll();
         SimpleBeanPropertyFilter filter =
@@ -65,7 +63,6 @@ public class ApplicationController {
         FilterProvider filters = new SimpleFilterProvider().addFilter("UserFilter", filter);
         MappingJacksonValue mapping = new MappingJacksonValue(users);
         mapping.setFilters(filters);
-
         return mapping;
     }
 
@@ -78,36 +75,38 @@ public class ApplicationController {
     @PostMapping("/v1/user")
     @ResponseStatus(HttpStatus.CREATED)
     public MappingJacksonValue createUser(@RequestBody User user) {
-        String username = user.getEmailAddress();
+        log.info("Request Received. GET /v1/user");
 
-        logger.info(username);
+        String username = user.getEmailAddress();
 
         // check whether the username is valid
         if (!emailValidator.isValid(username, null)) {
-            logger.warn("Invalid email!");
-            throw new EmailInvalidException("Invalid email!");
+            String msg = "Invalid email!";
+            log.error(msg);
+            throw new EmailInvalidException(msg);
         }
 
         // check whether the password is strong
         String password = user.getPassword();
         if (password.length() < 8 || !passwordValidator.isValid(password)) {
-            logger.warn("Password too weak");
-            throw new WeakPasswordException("Password Too Weak!");
+            String msg = "Password too weak";
+            log.error(msg);
+            throw new WeakPasswordException(msg);
         }
-
-        logger.info("Processing registration form for: " + username);
 
         User existing = userService.findByUsername(username);
-        if (existing != null){
-            logger.warn("Username already exist!");
-            throw new UserAlreadyExist("Username already exist!");
+        if (existing != null) {
+            String msg = "Username already exist";
+            log.error(msg);
+            throw new UserAlreadyExist(msg);
         }
 
+        // create new user
         user.setId(UUID.randomUUID().toString());
         user.setAccountCreated(dateFormat.format(new Date()));
         User savedUser = userService.save(user);
 
-        logger.info("Creating user... ID: " + savedUser.getId());
+        log.info("User Created. User Id: " + savedUser.getId());
 
         SimpleBeanPropertyFilter filter =
                 SimpleBeanPropertyFilter.filterOutAllExcept("id", "firstName", "lastName",
@@ -116,7 +115,6 @@ public class ApplicationController {
         FilterProvider filters = new SimpleFilterProvider().addFilter("UserFilter", filter);
         MappingJacksonValue mapping = new MappingJacksonValue(savedUser);
         mapping.setFilters(filters);
-
         return mapping;
     }
 
@@ -128,9 +126,12 @@ public class ApplicationController {
      */
     @GetMapping("/v1/user/self")
     public MappingJacksonValue findOne() {
-        logger.info("Retrieving current user");
+        log.info("Request Received. GET /v1/user/self");
 
         User user = userService.getCurrentUser();
+
+        log.info("User Retrieved. User Id: " + user.getId());
+
         SimpleBeanPropertyFilter filter =
                 SimpleBeanPropertyFilter.filterOutAllExcept("id", "firstName", "lastName",
                         "emailAddress", "accountCreated", "accountUpdated");
@@ -138,7 +139,6 @@ public class ApplicationController {
         FilterProvider filters = new SimpleFilterProvider().addFilter("UserFilter", filter);
         MappingJacksonValue mapping = new MappingJacksonValue(user);
         mapping.setFilters(filters);
-
         return mapping;
     }
 
@@ -151,20 +151,21 @@ public class ApplicationController {
     @PutMapping("/v1/user/self")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody User user) {
-        logger.info("Updating user...");
+        log.info("Request Received. PUT /v1/user/self");
 
         if (user.getEmailAddress() != null
                 || user.getAccountCreated() != null
                 || user.getAccountUpdated() != null) {
-            logger.warn("Updating user: Fields are not allowed to modify");
-            throw new FieldRestrictedException("Fields not allowed to modify; " +
-                    "Only can change FirstName, LastName and Password.");
+            String msg = "Updating user: Fields are not allowed to modify";
+            log.error(msg);
+            throw new FieldRestrictedException(msg);
         }
 
         String password = user.getPassword();
         if (password != null && (password.length() < 8 || !passwordValidator.isValid(password))) {
-            logger.warn("Password too weak");
-            throw new WeakPasswordException("Password Too Weak!");
+            String msg = "Password too weak";
+            log.warn(msg);
+            throw new WeakPasswordException(msg);
         }
 
         User old = userService.getCurrentUser();
@@ -174,7 +175,7 @@ public class ApplicationController {
         user.setAccountCreated(old.getAccountCreated());
 
         userService.save(user);
-        logger.info("User updated. ID: " + old.getId());
+        log.info("User updated. User Id: " + old.getId());
     }
 
 }
