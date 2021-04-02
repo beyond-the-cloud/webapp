@@ -30,7 +30,7 @@ public class AlertController {
         this.userService = userService;
     }
 
-    @PostMapping("/v1/alert")
+    @PostMapping("/**/v1/alert")
     public ResponseEntity post(@RequestBody Alert alert) {
         log.info("Request Received. GET /v1/alert");
 
@@ -61,7 +61,7 @@ public class AlertController {
         return new ResponseEntity<>("{\"message\": \"Alert Created.\"}", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/v1/alert")
+    @DeleteMapping("/**/v1/alert")
     public ResponseEntity delete(@RequestBody Alert alert) {
         log.info("Request Received. DELETE /v1/alert");
 
