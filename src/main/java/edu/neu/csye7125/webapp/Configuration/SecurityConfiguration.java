@@ -34,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**/v1/helloworld", "/**/v1/users", "/**/v1/user", "/**/actuator/**", "/**/v1/alert")
+                .antMatchers("/", "/**/v1/helloworld", "/**/v1/users", "/**/v1/user", "/**/actuator/**", "/**/v1/alert")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
