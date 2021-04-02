@@ -40,7 +40,7 @@ public class ApplicationController {
      * Used for verify server is running, can also be used for health check or readiness check
      * @return
      */
-    @GetMapping("/v1/helloworld")
+    @GetMapping("/**/v1/helloworld")
     public String helloWorld() {
         return "Hello World";
     }
@@ -51,7 +51,7 @@ public class ApplicationController {
      * Return a list of users in json, which only contain certain fields
      * @return
      */
-    @GetMapping("/v1/users")
+    @GetMapping("/**/v1/users")
     public MappingJacksonValue findAll() {
         log.info("Request Received. GET /v1/users");
 
@@ -72,7 +72,7 @@ public class ApplicationController {
      * @param user
      * @return
      */
-    @PostMapping("/v1/user")
+    @PostMapping("/**/v1/user")
     @ResponseStatus(HttpStatus.CREATED)
     public MappingJacksonValue createUser(@RequestBody User user) {
         log.info("Request Received. GET /v1/user");
@@ -124,7 +124,7 @@ public class ApplicationController {
      * Return current authenticated user
      * @return
      */
-    @GetMapping("/v1/user/self")
+    @GetMapping("/**/v1/user/self")
     public MappingJacksonValue findOne() {
         log.info("Request Received. GET /v1/user/self");
 
@@ -148,7 +148,7 @@ public class ApplicationController {
      * Update current authenticated user
      * @param user
      */
-    @PutMapping("/v1/user/self")
+    @PutMapping("/**/v1/user/self")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody User user) {
         log.info("Request Received. PUT /v1/user/self");
