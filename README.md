@@ -2,7 +2,7 @@
 Repository for a simple web application.
 
 ## Jenkins 
-Jenkins is running on: https://jenkins.bh7cw.me
+Jenkins is running on: https://https://jenkins.gke.prod.bh7cw.me
 
 ## Webapp with Docker
 
